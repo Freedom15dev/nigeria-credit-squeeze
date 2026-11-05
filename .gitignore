@@ -1,0 +1,11 @@
+# Python environment and caches
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+
+# Editor and tool settings
+.vscode/
+.qodo/
+
+# Project brief (private)
+CLAUDE.md
