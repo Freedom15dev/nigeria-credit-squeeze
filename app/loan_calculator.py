@@ -21,6 +21,7 @@ import loan_offers  # noqa: E402
 
 ARTICLE_URL = "https://github.com/Freedom15dev/nigeria-credit-squeeze#readme"
 REPO_URL = "https://github.com/Freedom15dev/nigeria-credit-squeeze"
+APP_URL = "https://naija-loan-cost.streamlit.app/"
 
 NAVY, BLUE, ORANGE, GREY = "#0F1E33", "#2A6FDB", "#D9822B", "#8A94A6"
 
@@ -376,6 +377,7 @@ def header():
         f"A free calculator from my analysis of 20 years of CBN data and Nigerian loan app rates. "
         f"[Read the article]({ARTICLE_URL}) · [See the code on GitHub]({REPO_URL})"
     )
+    st.caption(f"Share it: [naija-loan-cost.streamlit.app]({APP_URL})")
 
 
 def footer():
