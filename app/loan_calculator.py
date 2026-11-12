@@ -19,7 +19,7 @@ sys.path.insert(0, str(ROOT / "src"))
 import loan_math  # noqa: E402  (needs the path above)
 import loan_offers  # noqa: E402
 
-ARTICLE_URL = "https://github.com/Freedom15dev/nigeria-credit-squeeze#readme"
+ARTICLE_URL = "https://www.linkedin.com/pulse/who-gets-borrow-nigeria-i-followed-two-borrowers-find-freedom-oboh-q6mof"
 REPO_URL = "https://github.com/Freedom15dev/nigeria-credit-squeeze"
 APP_URL = "https://naija-loan-cost.streamlit.app/"
 
@@ -29,6 +29,7 @@ NAVY, BLUE, ORANGE, GREY = "#0F1E33", "#2A6FDB", "#D9822B", "#8A94A6"
 MAX_AMOUNT = 1_000_000_000      # ₦1 billion: anything above is almost certainly a typo
 MAX_MONTHLY_RATE = 100.0
 MAX_DAYS, MAX_MONTHS = 365, 60
+LONGEST_APP_DAYS = 365  # longer loans are compared with bank rates only (see comparison())
 
 PRESETS = {
     "Tunde": dict(amount=100_000.0, rate=8.25, rate_unit="per month", length=1, length_unit="months",
@@ -246,16 +247,18 @@ def comparison(loan):
     bank, offers = reference_data()
     days = inp["length"] if inp["length_unit"] == "days" else inp["length"] * 30
     products = loan_offers.products_for(offers, days, business=inp["purpose"] == "Business")
-    t = loan_offers.tiers(products)
 
     rows = [
         ("Bank: prime rate", bank["prime_month"], BLUE),
         ("Bank: maximum rate", bank["max_month"], BLUE),
-        (loan_offers.TIER_LABELS["start"], t["start"], GREY),
-        (loan_offers.TIER_LABELS["mid"], t["mid"], GREY),
-        (loan_offers.TIER_LABELS["high"], t["high"], GREY),
         ("Your loan", loan["monthly"], ORANGE),
     ]
+    # No app product in the data advertises loans over a year; the only ones left would be short-term
+    # quick loans with no published tenor, so long loans are compared with banks only.
+    bank_only = days > LONGEST_APP_DAYS or products.empty
+    if not bank_only:
+        t = loan_offers.tiers(products)
+        rows += [(loan_offers.TIER_LABELS[k], t[k], GREY) for k in ["start", "mid", "high"] if t[k] == t[k]]  # skip NaN
     rows.sort(key=lambda r: total_at(loan, r[1]))
     labels = [f"{name} · {pct(rate)} a month" for name, rate, _ in rows]
     totals = [total_at(loan, rate) for _, rate, _ in rows]
@@ -282,11 +285,17 @@ def comparison(loan):
     )
     st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
     how = "one repayment at the end" if loan["one_payment"] else loan["shown"].lower()
-    st.caption(
-        f"Bank rates: CBN averages, {bank['month']}. App rates: advertised, as checked Apr–Nov 2026, "
-        f"using the {len(products)} app products in the project's data that offer this loan length "
-        f"({inp['purpose'].lower()} loans). Your actual offer depends on you. All bars: {how}."
-    )
+    if bank_only:
+        st.caption(
+            f"No loan app in this data advertises loans this long, so only bank rates are shown. "
+            f"Bank rates: CBN averages, {bank['month']}. Your actual offer depends on you. All bars: {how}."
+        )
+    else:
+        st.caption(
+            f"Bank rates: CBN averages, {bank['month']}. App rates: advertised, as checked Apr–Nov 2026, "
+            f"using the {len(products)} app products in the project's data that offer this loan length "
+            f"({inp['purpose'].lower()} loans). Your actual offer depends on you. All bars: {how}."
+        )
 
 
 # ------------------------------------------------------------------ step 4: what if you pay late?
@@ -338,7 +347,8 @@ def late_payment(loan):
         yaxis=dict(tickprefix="₦", tickformat=",.0f", gridcolor="#E3E6EB"),
     )
     st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
-    st.caption("Example penalty terms based on what lenders publish. Check your own lender's terms.")
+    st.caption("Example penalty terms based on what lenders publish. Check your own lender's terms. "
+               "The chart starts at the amount due, so small changes look bigger than they are.")
 
 
 # ------------------------------------------------------------------ step 5: before you borrow
