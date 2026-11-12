@@ -4,6 +4,10 @@
 
 > ⚠️ **Not financial advice.** This is a historical data analysis and a learning project. It does not recommend any bank, loan app or lender.
 
+## 🧮 Try the calculator
+
+**What will this loan really cost me?** Type in any loan and see what it costs per year, the total you'll repay in naira, a month-by-month breakdown, how it compares with bank and loan app rates, and what happens if you pay late. Live link coming soon. To run it on your own computer, see [How to run it](#how-to-run-it-windows).
+
 ---
 
 ## Why this question matters
@@ -212,6 +216,13 @@ Open `notebooks/credit_squeeze.ipynb` in VS Code, select the `.venv` kernel, the
 
 Every number in this README comes from the notebook, via `data/processed/readme_numbers.json`.
 
+**The loan calculator** (Streamlit):
+```powershell
+.venv\Scripts\python.exe -m pip install -r app\requirements.txt
+.venv\Scripts\streamlit.exe run app\loan_calculator.py
+```
+It opens in your browser at http://localhost:8501. It uses the same maths (`src/loan_math.py`) and the same bank rates and app tiers as this article. It stores nothing and asks for no personal details.
+
 ---
 
 ## Repository structure
@@ -221,12 +232,17 @@ nigeria-credit-squeeze/
 ├── README.md                     # this story
 ├── LICENSE                       # MIT (code); data belongs to its sources
 ├── requirements.txt
+├── app/
+│   ├── loan_calculator.py        # the Streamlit loan calculator
+│   └── requirements.txt          # streamlit, plotly, pandas, numpy (pinned)
+├── .streamlit/config.toml        # calculator theme
 ├── notebooks/
 │   └── credit_squeeze.ipynb      # chapters 1–11 in order
 ├── src/
 │   ├── fetch_cbn.py              # downloads the CBN feeds to data/raw/ (dated)
 │   ├── clean.py                  # tidy monthly tables; every data trap handled here
-│   ├── loan_math.py              # monthly→annual, flat vs reducing, repayment totals
+│   ├── loan_math.py              # monthly→annual, flat vs reducing, schedules, late payment
+│   ├── loan_offers.py            # bank rates and app tiers for the calculator
 │   └── style.py                  # house chart style
 ├── data/
 │   ├── raw/                      # CBN pulls, dated, never edited
