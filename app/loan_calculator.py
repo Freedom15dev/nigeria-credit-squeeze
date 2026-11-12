@@ -67,34 +67,36 @@ def init_state():
 
 
 def loan_inputs():
-    """Step 1. Returns the inputs as a dict (not yet validated)."""
-    with st.sidebar:
+    """Step 1, in a box at the top of the page so it's the first thing anyone sees, phone or desktop.
+    Returns the inputs as a dict (not yet validated)."""
+    with st.container(border=True):
         st.header("Step 1: Your loan")
-        st.caption("Try an example from the article:")
+        st.caption("Type in your own loan, or try an example from the article:")
         c1, c2 = st.columns(2)
         c1.button("Tunde: ₦100k, 1 month", on_click=apply_preset, args=("Tunde",), width="stretch")
         c2.button("Amaka: ₦500k, 6 months", on_click=apply_preset, args=("Amaka",), width="stretch")
 
-        amount = st.number_input("Amount you want to borrow (₦)", step=10_000.0, format="%.0f", key="amount")
-        st.caption(f"That's **{naira(amount)}**" if amount and amount > 0 else " ")
-
-        rate = st.number_input("Interest rate (%)", step=0.25, format="%.2f", key="rate",
-                               help="Loan apps usually quote per month, banks per year.")
-        rate_unit = st.radio("The rate is", ["per month", "per year"], horizontal=True, key="rate_unit",
-                             help="Loan apps usually quote per month, banks per year.")
-
-        length = st.number_input("Loan length", step=1, key="length")
-        length_unit = st.radio("Length in", ["days", "months"], horizontal=True, key="length_unit")
-
-        method = st.radio(
-            "How is interest charged?",
-            ["Reducing balance", "Flat", "Not sure, show me both"],
-            key="method",
-            help=("**Reducing balance:** you pay interest only on what you still owe, so it shrinks as you repay.  \n"
-                  "**Flat:** you pay interest on the full amount every month, even after you've repaid part of it."),
-        )
-        purpose = st.radio("What's the loan for?", ["Personal", "Business"], horizontal=True, key="purpose",
-                           help="Used only to pick which loan app products to compare you with.")
+        # Two columns on a wide screen; they stack into one on a phone
+        left, right = st.columns(2)
+        with left:
+            amount = st.number_input("Amount you want to borrow (₦)", step=10_000.0, format="%.0f", key="amount")
+            st.caption(f"That's **{naira(amount)}**" if amount and amount > 0 else " ")
+            rate = st.number_input("Interest rate (%)", step=0.25, format="%.2f", key="rate",
+                                   help="Loan apps usually quote per month, banks per year.")
+            rate_unit = st.radio("The rate is", ["per month", "per year"], horizontal=True, key="rate_unit",
+                                 help="Loan apps usually quote per month, banks per year.")
+        with right:
+            length = st.number_input("Loan length", step=1, key="length")
+            length_unit = st.radio("Length in", ["days", "months"], horizontal=True, key="length_unit")
+            method = st.radio(
+                "How is interest charged?",
+                ["Reducing balance", "Flat", "Not sure, show me both"],
+                key="method",
+                help=("**Reducing balance:** you pay interest only on what you still owe, so it shrinks as you repay.  \n"
+                      "**Flat:** you pay interest on the full amount every month, even after you've repaid part of it."),
+            )
+            purpose = st.radio("What's the loan for?", ["Personal", "Business"], horizontal=True, key="purpose",
+                               help="Used only to pick which loan app products to compare you with.")
 
     return dict(amount=amount, rate=rate, rate_unit=rate_unit, length=length, length_unit=length_unit,
                 method=method, purpose=purpose)
@@ -396,7 +398,7 @@ def main():
     if problems:
         for p in problems:
             st.error(p)
-        st.info("Fix the loan details in **Step 1** (on a phone, tap **>** at the top left to open it).")
+        st.info("Fix the loan details in **Step 1** above.")
         footer()
         return
 
