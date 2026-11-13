@@ -386,7 +386,7 @@ def tips():
 def header():
     st.title("What will this loan really cost me?")
     st.markdown(
-        f"A free calculator from my analysis of 20 years of CBN data and Nigerian loan app rates. "
+        f"A calculator from my analysis of 20 years of CBN data and Nigerian loan app rates. "
         f"[Read the article]({ARTICLE_URL}) · [See the code on GitHub]({REPO_URL})"
     )
     st.caption(f"Share it: [naija-loan-cost.streamlit.app]({APP_URL})")

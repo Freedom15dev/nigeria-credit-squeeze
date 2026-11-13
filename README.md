@@ -6,7 +6,7 @@
 
 ## 🧮 Try the calculator: [naija-loan-cost.streamlit.app](https://naija-loan-cost.streamlit.app/)
 
-**What will this loan really cost me?** Type in any loan and see what it costs per year, the total you'll repay in naira, a month-by-month breakdown, how it compares with bank and loan app rates, and what happens if you pay late. It works on your phone, it's free, and it stores nothing. To run it on your own computer, see [How to run it](#how-to-run-it-windows).
+**What will this loan really cost me?** Type in any loan and see what it costs per year, the total you'll repay in naira, a month-by-month breakdown, how it compares with bank and loan app rates, and what happens if you pay late. It works on your phone and it stores nothing. To run it on your own computer, see [How to run it](#how-to-run-it-windows).
 
 ---
 
