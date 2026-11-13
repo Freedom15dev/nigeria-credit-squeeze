@@ -22,6 +22,7 @@ import loan_offers  # noqa: E402
 ARTICLE_URL = "https://www.linkedin.com/pulse/who-gets-borrow-nigeria-i-followed-two-borrowers-find-freedom-oboh-q6mof"
 REPO_URL = "https://github.com/Freedom15dev/nigeria-credit-squeeze"
 APP_URL = "https://naija-loan-cost.streamlit.app/"
+NEW_HOME_URL = "https://money-matters-ng.streamlit.app/"  # the calculator's new home (My loan)
 
 NAVY, BLUE, ORANGE, GREY = "#0F1E33", "#2A6FDB", "#D9822B", "#8A94A6"
 
@@ -400,6 +401,9 @@ def footer():
 
 def main():
     st.set_page_config(page_title="Loan cost calculator", page_icon="₦", layout="centered")
+    st.info(f"**[The loan calculator now lives in (+234) Money Matters →]({NEW_HOME_URL})**  \n"
+            "It has the same maths, bank rates that update every month, and Nigeria's inflation, naira and savings "
+            "in one place. This page still works.", icon="➡️")
     init_state()
     header()
     inp = loan_inputs()
